@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside th:fragment="sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo"><i class="fa-solid fa-building"></i></div>
+        <div class="company-name">AZPOS</div>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="/musteriler" class="nav-item" data-page="musteriler"><i class="fa-solid fa-users"></i> Müştərilər</a>
+        <a href="/xercler" class="nav-item" data-page="xercler"><i class="fa-solid fa-wallet"></i> Xərclər</a>
+        <a href="/bildirisler" class="nav-item" data-page="bildirisler"><i class="fa-solid fa-bell"></i> Bildirişlər</a>
+        <a href="/servis" class="nav-item" data-page="servis"><i class="fa-solid fa-screwdriver-wrench"></i> Servis Jurnalı</a>
+        <a href="/anbar" class="nav-item" data-page="anbar"><i class="fa-solid fa-boxes-stacked"></i> Anbar</a>
+        <a href="/hesabatlar" class="nav-item" data-page="hesabatlar"><i class="fa-solid fa-chart-pie"></i> Hesabatlar</a>
+        <a href="/odenisli" class="nav-item" data-page="odenisli"><i class="fa-solid fa-credit-card"></i> Ödənişli Servislər</a>
+        <div class="nav-group">
+            <a href="#" class="nav-item nav-toggle"><i class="fa-solid fa-cart-shopping"></i> Satışlar <i class="fa-solid fa-chevron-down arrow"></i></a>
+            <div class="nav-sub">
+                <a href="/satis-avadanliq" class="nav-item" data-page="satis-avadanliq"><i class="fa-solid fa-computer"></i> Avadanlıq satışı</a>
+                <a href="/satis-umumi" class="nav-item" data-page="satis-umumi"><i class="fa-solid fa-store"></i> Ümumi Satış</a>
+            </div>
+        </div>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+        <div class="user-info">
+            <span class="user-name">Demo istifadəçi</span>
+            <span class="user-role">Administrator</span>
+        </div>
+    </div>
+</aside>
+</body>
+</html>

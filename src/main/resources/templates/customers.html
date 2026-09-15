@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Müştərilər — ERP Sistem</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body data-page="musteriler">
+<div class="app">
+    <aside th:replace="~{sidebar :: sidebar}"></aside>
+
+    <main class="main">
+        <section id="page-musteriler" class="page active">
+            <div class="page-header">
+                <div>
+                    <h1>Müştərilər</h1>
+                    <p class="subtitle">Müştəri məlumatlarının idarə edilməsi</p>
+                </div>
+                <div class="header-right">
+                    <span class="date-display" id="today-date"></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Müştəri əlavə et</h3>
+
+                <!--@thymesVar id="customer" type="com.delivery.officemanagementsystem.dto.CustomerDto"-->
+                <form th:action="@{/customers/add}" th:object="${customer}" method="post" class="inline-form" id="customer-form-row">
+
+                    <div class="field">
+                        <label>Obyektin adı</label>
+                        <input type="text" th:field="*{objectName}" placeholder="Obyekt adı" required>
+                    </div>
+
+                    <div class="field">
+                        <label>Ünvanı</label>
+                        <input type="text" th:field="*{address}" placeholder="Ünvan">
+                    </div>
+
+                    <div class="field">
+                        <label>Əlaqədar Şəxs</label>
+                        <input type="text" th:field="*{contactPerson}" placeholder="Ad Soyad" required>
+                    </div>
+
+                    <div class="field">
+                        <label>Doğum Tarixi</label>
+                        <input type="date" th:field="*{birthDate}">
+                    </div>
+
+                    <div class="field">
+                        <label>Quraşdırma Tarixi</label>
+                        <input type="date" th:field="*{establishmentDate}" required>
+                    </div>
+
+                    <div class="field">
+                        <label>Telefon Nömrəsi</label>
+                        <input type="tel" th:field="*{phoneNumber}" placeholder="+994" required>
+                    </div>
+
+                    <div class="field">
+                        <label>Anydesk</label>
+                        <input type="text" th:field="*{anydeskId}" placeholder="ID">
+                    </div>
+
+                    <div class="field">
+                        <label>Şirkət adı</label>
+                        <select th:field="*{companyName}" required>
+                            <option value="">Seçin...</option>
+                            <option th:each="company : ${T(com.delivery.officemanagementsystem.enums.CompanyName).values()}"
+                                    th:value="${company}"
+                                    th:text="${company}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="field actions">
+                        <button type="submit" class="btn btn-primary" id="c-add-btn">
+                            <i class="fa-solid fa-plus"></i> Əlavə et
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header-row">
+                    <h3 class="card-title">Müştəri siyahısı</h3>
+                    <div class="search-box">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="c-search" placeholder="Axtar...">
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Obyektin adı</th>
+                            <th>Ünvanı</th>
+                            <th>Əlaqədar Şəxs</th>
+                            <th>Doğum Tarixi</th>
+                            <th>Quraşdırma Tarixi</th>
+                            <th>Telefon</th>
+                            <th>Anydesk</th>
+                            <th>Şirkət adı</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                        </thead>
+                        <tbody id="c-table-body">
+                        <!--@thymesVar id="cust" type="com.delivery.officemanagementsystem.dto.CustomerDto"-->
+                        <tr th:each="cust, iter : ${customers}" th:attr="data-id=${cust.id}">
+                            <td th:text="${iter.count}">1</td>
+
+                            <td>
+                                <span class="view-val" th:text="${cust.objectName}">-</span>
+                                <input type="text" class="edit-val hidden" data-field="objectName" th:value="${cust.objectName}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${cust.address}">-</span>
+                                <input type="text" class="edit-val hidden" data-field="address" th:value="${cust.address}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${cust.contactPerson}">-</span>
+                                <input type="text" class="edit-val hidden" data-field="contactPerson" th:value="${cust.contactPerson}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${cust.birthDate}">-</span>
+                                <input type="date" class="edit-val hidden" data-field="birthDate" th:value="${cust.birthDate}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${cust.establishmentDate}">-</span>
+                                <input type="date" class="edit-val hidden" data-field="establishmentDate" th:value="${cust.establishmentDate}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${cust.phoneNumber}">-</span>
+                                <input type="tel" class="edit-val hidden" data-field="phoneNumber" th:value="${cust.phoneNumber}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${cust.anydeskId}">-</span>
+                                <input type="text" class="edit-val hidden" data-field="anydeskId" th:value="${cust.anydeskId}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${cust.companyName}">-</span>
+                                <select class="edit-val hidden" data-field="companyName" th:attr="data-original=${cust.companyName}">
+                                    <option th:each="company : ${T(com.delivery.officemanagementsystem.enums.CompanyName).values()}"
+                                            th:value="${company}"
+                                            th:text="${company}"
+                                            th:selected="${company == cust.companyName}">
+                                    </option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <div class="td-actions view-actions">
+                                    <button type="button" class="btn btn-edit" onclick="startEditRow(this)">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <form th:action="@{/customers/delete/{id}(id=${cust.id})}" method="post" style="display:inline;">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="confirmDelete(this, 'Müştərini silməyə əminsiniz?')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="td-actions edit-actions hidden">
+                                    <button type="button" class="btn btn-save" onclick="saveEditRow(this)">
+                                        <i class="fa-solid fa-check"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-cancel-edit" onclick="cancelEditRow(this)">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(customers)}">
+                            <td colspan="10" style="text-align: center; color: #888;">Hələ ki heç bir müştəri əlavə olunmayıb.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sətir redaktəsi bu gizli formaya köçürülüb submit edilir -->
+            <form id="edit-customer-form" method="post" style="display:none;">
+                <input type="hidden" name="objectName">
+                <input type="hidden" name="address">
+                <input type="hidden" name="contactPerson">
+                <input type="hidden" name="birthDate">
+                <input type="hidden" name="establishmentDate">
+                <input type="hidden" name="phoneNumber">
+                <input type="hidden" name="anydeskId">
+                <input type="hidden" name="companyName">
+            </form>
+        </section>
+    </main>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

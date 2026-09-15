@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-is-active-to-customers
+      author: laman
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - columnExists:
+                tableName: customers
+                columnName: is_active
+      changes:
+        - addColumn:
+            tableName: customers
+            columns:
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
