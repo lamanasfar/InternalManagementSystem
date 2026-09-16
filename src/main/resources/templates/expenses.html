@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xərclər — ERP Sistem</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body data-page="xercler">
+<div class="app">
+    <aside th:replace="~{sidebar :: sidebar}"></aside>
+
+    <main class="main">
+        <section id="page-xercler" class="page active">
+            <div class="page-header">
+                <div><h1>Xərclər</h1><p class="subtitle">Xərc növləri və xərc qeydləri</p></div>
+                <div class="header-right"><span class="date-display"></span></div>
+            </div>
+            <div class="card">
+                <h3 class="card-title">Xərc növü əlavə et</h3>
+                <div class="inline-form">
+                    <div class="field flex-grow"><label>Xərc növü</label><input type="text" id="et-name" placeholder="Məs: Yanacaq, Nəqliyyat..."></div>
+                    <div class="field actions"><button class="btn btn-primary" id="et-add-btn"><i class="fa-solid fa-plus"></i> Əlavə et</button></div>
+                </div>
+                <div id="et-tags" class="tags-list"></div>
+            </div>
+            <div class="card">
+                <h3 class="card-title">Xərc əlavə et</h3>
+                <div class="expense-form">
+                    <div class="form-row">
+                        <div class="field"><label>Xərc növü seçin</label>
+                            <select id="e-type"><option value="">Seçin...</option></select>
+                        </div>
+                        <div class="field"><label>Məbləğ</label><input type="number" id="e-amount" placeholder="0.00" step="0.01"></div>
+                        <div class="field"><label>Xərci kim ödəyir</label><input type="text" id="e-payer" placeholder="Ad"></div>
+                        <div class="field"><label>Tarix</label><input type="date" id="e-date"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="field flex-grow"><label>Təsvir</label><input type="text" id="e-desc" placeholder="Qısa təsvir"></div>
+                        <div class="field"><label>Çek faylı</label><input type="file" id="e-receipt" accept="image/*,.pdf"></div>
+                        <div class="field actions">
+                            <button class="btn btn-primary" id="e-add-btn"><i class="fa-solid fa-plus"></i> Əlavə et</button>
+                            <button class="btn btn-edit hidden" id="e-save-btn"><i class="fa-solid fa-check"></i> Yadda saxla</button>
+                            <button class="btn btn-cancel hidden" id="e-cancel-btn"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header-row">
+                    <h3 class="card-title">Xərc siyahısı</h3>
+                    <div class="search-box"><i class="fa-solid fa-search"></i><input type="text" id="e-search" placeholder="Axtar..."></div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr><th>#</th><th>Növ</th><th>Məbləğ</th><th>Ödəyən</th><th>Tarix</th><th>Təsvir</th><th>Çek</th><th>Əməliyyatlar</th></tr>
+                        </thead>
+                        <tbody id="e-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

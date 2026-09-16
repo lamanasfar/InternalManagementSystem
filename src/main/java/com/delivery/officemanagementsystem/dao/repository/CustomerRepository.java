@@ -2,11 +2,12 @@ package com.delivery.officemanagementsystem.dao.repository;
 
 import com.delivery.officemanagementsystem.dao.entity.CustomerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
-    List<CustomerEntity> findAllByIsActiveTrue();
+public interface CustomerRepository extends JpaRepository<CustomerEntity, Long>, JpaSpecificationExecutor<CustomerEntity> {
+
 }

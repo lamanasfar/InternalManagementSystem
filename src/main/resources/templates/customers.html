@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Müştərilər — ERP Sistem</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body data-page="musteriler">
@@ -86,10 +88,19 @@
             <div class="card">
                 <div class="card-header-row">
                     <h3 class="card-title">Müştəri siyahısı</h3>
-                    <div class="search-box">
+                    <form th:action="@{/customers}" method="get" class="search-box">
                         <i class="fa-solid fa-search"></i>
-                        <input type="text" id="c-search" placeholder="Axtar...">
-                    </div>
+
+                        <input
+                                type="text"
+                                name="search"
+                                id="c-search"
+                                placeholder="Axtar..."
+                                th:value="${search}"
+                        >
+
+                        <button type="submit" style="display: none;"></button>
+                    </form>
                 </div>
                 <div class="table-wrap">
                     <table>
@@ -110,7 +121,7 @@
                         <tbody id="c-table-body">
                         <!--@thymesVar id="cust" type="com.delivery.officemanagementsystem.dto.CustomerDto"-->
                         <tr th:each="cust, iter : ${customers}" th:attr="data-id=${cust.id}">
-                            <td th:text="${iter.count}">1</td>
+                            <td th:text="${page.number * page.size + iter.count}">1</td>
 
                             <td>
                                 <span class="view-val" th:text="${cust.objectName}">-</span>
@@ -186,7 +197,29 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="pagination" th:if="${page.totalPages > 1}">
+                    <a th:href="@{/customers(page=${page.number - 1}, search=${search})}"
+                       th:classappend="${page.first} ? ' disabled'"
+                       class="btn btn-page">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+
+                    <a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                       th:href="@{/customers(page=${i}, search=${search})}"
+                       th:text="${i + 1}"
+                       th:classappend="${i == page.number} ? ' active'"
+                       class="btn btn-page-num">1</a>
+
+                    <a th:href="@{/customers(page=${page.number + 1}, search=${search})}"
+                       th:classappend="${page.last} ? ' disabled'"
+                       class="btn btn-page">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
             </div>
+
+
 
             <!-- Sətir redaktəsi bu gizli formaya köçürülüb submit edilir -->
             <form id="edit-customer-form" method="post" style="display:none;">
