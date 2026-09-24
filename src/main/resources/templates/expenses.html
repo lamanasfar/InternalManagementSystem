@@ -6,7 +6,6 @@
     <title>Xərclər — ERP Sistem</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/common.css}">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body data-page="xercler">
@@ -19,36 +18,75 @@
                 <div><h1>Xərclər</h1><p class="subtitle">Xərc növləri və xərc qeydləri</p></div>
                 <div class="header-right"><span class="date-display"></span></div>
             </div>
+
+            <!-- Xərc növü əlavə et -->
             <div class="card">
                 <h3 class="card-title">Xərc növü əlavə et</h3>
-                <div class="inline-form">
-                    <div class="field flex-grow"><label>Xərc növü</label><input type="text" id="et-name" placeholder="Məs: Yanacaq, Nəqliyyat..."></div>
-                    <div class="field actions"><button class="btn btn-primary" id="et-add-btn"><i class="fa-solid fa-plus"></i> Əlavə et</button></div>
+                <!--@thymesVar id="expenseType" type="com.delivery.officemanagementsystem.dto.ExpenseTypeDto"-->
+                <form th:action="@{/expenses/types/add}" th:object="${expenseType}" method="post" class="inline-form">
+                    <div class="field flex-grow">
+                        <label>Xərc növü</label>
+                        <input type="text" th:field="*{name}" placeholder="Məs: Yanacaq, Nəqliyyat..." required>
+                    </div>
+                    <div class="field actions">
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Əlavə et</button>
+                    </div>
+                </form>
+                <div id="et-tags" class="tags-list">
+                    <span class="tag" th:each="type : ${expenseTypes}">
+                        <span th:text="${type.name}">Yanacaq</span>
+                        <form th:action="@{/expenses/types/delete/{id}(id=${type.id})}" method="post" style="display:inline;">
+                            <i class="fa-solid fa-xmark tag-del"
+                               onclick="confirmDelete(this, 'Bu xərc növünü silmək istədiyinizə əminsiniz?')"></i>
+                        </form>
+                    </span>
                 </div>
-                <div id="et-tags" class="tags-list"></div>
             </div>
+
+            <!-- Xərc əlavə et -->
             <div class="card">
                 <h3 class="card-title">Xərc əlavə et</h3>
-                <div class="expense-form">
+                <!--@thymesVar id="expense" type="com.delivery.officemanagementsystem.dto.ExpenseDto"-->
+                <form th:action="@{/expenses/add}" th:object="${expense}" method="post"
+                      enctype="multipart/form-data" class="expense-form">
                     <div class="form-row">
-                        <div class="field"><label>Xərc növü seçin</label>
-                            <select id="e-type"><option value="">Seçin...</option></select>
+                        <div class="field">
+                            <label>Xərc növü seçin</label>
+                            <select th:field="*{expenseTypeId}" required>
+                                <option value="">Seçin...</option>
+                                <option th:each="type : ${expenseTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+                            </select>
                         </div>
-                        <div class="field"><label>Məbləğ</label><input type="number" id="e-amount" placeholder="0.00" step="0.01"></div>
-                        <div class="field"><label>Xərci kim ödəyir</label><input type="text" id="e-payer" placeholder="Ad"></div>
-                        <div class="field"><label>Tarix</label><input type="date" id="e-date"></div>
+                        <div class="field">
+                            <label>Məbləğ</label>
+                            <input type="number" th:field="*{amount}" placeholder="0.00" step="0.01" required>
+                        </div>
+                        <div class="field">
+                            <label>Xərci kim ödəyir</label>
+                            <input type="text" th:field="*{payer}" placeholder="Ad">
+                        </div>
+                        <div class="field">
+                            <label>Tarix</label>
+                            <input type="date" th:field="*{date}" required>
+                        </div>
                     </div>
                     <div class="form-row">
-                        <div class="field flex-grow"><label>Təsvir</label><input type="text" id="e-desc" placeholder="Qısa təsvir"></div>
-                        <div class="field"><label>Çek faylı</label><input type="file" id="e-receipt" accept="image/*,.pdf"></div>
+                        <div class="field flex-grow">
+                            <label>Təsvir</label>
+                            <input type="text" th:field="*{description}" placeholder="Qısa təsvir">
+                        </div>
+                        <div class="field">
+                            <label>Çek faylı</label>
+                            <input type="file" th:field="*{receiptFile}" accept="image/*,.pdf">
+                        </div>
                         <div class="field actions">
-                            <button class="btn btn-primary" id="e-add-btn"><i class="fa-solid fa-plus"></i> Əlavə et</button>
-                            <button class="btn btn-edit hidden" id="e-save-btn"><i class="fa-solid fa-check"></i> Yadda saxla</button>
-                            <button class="btn btn-cancel hidden" id="e-cancel-btn"><i class="fa-solid fa-xmark"></i></button>
+                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Əlavə et</button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
+
+            <!-- Xərc siyahısı -->
             <div class="card">
                 <div class="card-header-row">
                     <h3 class="card-title">Xərc siyahısı</h3>
@@ -59,10 +97,88 @@
                         <thead>
                         <tr><th>#</th><th>Növ</th><th>Məbləğ</th><th>Ödəyən</th><th>Tarix</th><th>Təsvir</th><th>Çek</th><th>Əməliyyatlar</th></tr>
                         </thead>
-                        <tbody id="e-table-body"></tbody>
+                        <tbody id="e-table-body">
+                        <!--@thymesVar id="exp" type="com.delivery.officemanagementsystem.dto.ExpenseDto"-->
+                        <tr th:each="exp, iter : ${expenses}" th:attr="data-id=${exp.id},data-edit-form='edit-expense-form'">
+                            <td th:text="${iter.count}">1</td>
+
+                            <td>
+                                <span class="view-val" th:text="${exp.expenseTypeName}">-</span>
+                                <select class="edit-val hidden" data-field="expenseTypeId" th:attr="data-original=${exp.expenseTypeId}">
+                                    <option th:each="type : ${expenseTypes}" th:value="${type.id}" th:text="${type.name}"
+                                            th:selected="${type.id == exp.expenseTypeId}"></option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${exp.amount} + ' ₼'">-</span>
+                                <input type="number" step="0.01" class="edit-val hidden" data-field="amount" th:value="${exp.amount}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${exp.payer}">-</span>
+                                <input type="text" class="edit-val hidden" data-field="payer" th:value="${exp.payer}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${exp.date}">-</span>
+                                <input type="date" class="edit-val hidden" data-field="date" th:value="${exp.date}">
+                            </td>
+
+                            <td>
+                                <span class="view-val" th:text="${exp.description}">-</span>
+                                <input type="text" class="edit-val hidden" data-field="description" th:value="${exp.description}">
+                            </td>
+
+                            <td>
+                                <a class="receipt-link view-val" th:if="${exp.receiptPath != null}"
+                                   th:href="@{'/uploads/' + ${exp.receiptPath}}" target="_blank">
+                                    <i class="fa-solid fa-file"></i> Bax
+                                </a>
+                                <span class="view-val" th:if="${exp.receiptPath == null}">—</span>
+                                <input type="file" class="edit-val hidden" data-field="receiptFile" accept="image/*,.pdf">
+                            </td>
+
+                            <td>
+                                <div class="td-actions view-actions">
+                                    <button type="button" class="btn btn-edit" onclick="startEditRow(this)">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <form th:action="@{/expenses/delete/{id}(id=${exp.id})}" method="post" style="display:inline;">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="confirmDelete(this, 'Bu xərci silmək istədiyinizə əminsiniz?')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="td-actions edit-actions hidden">
+                                    <button type="button" class="btn btn-save" onclick="saveEditRow(this)">
+                                        <i class="fa-solid fa-check"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-cancel-edit" onclick="cancelEditRow(this)">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(expenses)}">
+                            <td colspan="8" style="text-align:center;color:#999">Hələ ki heç bir xərc əlavə olunmayıb.</td>
+                        </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- Sətir redaktəsi bu gizli formaya köçürülüb submit edilir -->
+            <form id="edit-expense-form" method="post" enctype="multipart/form-data"
+                  th:attr="data-base-path=@{/expenses/edit/}" style="display:none;">
+                <input type="hidden" name="expenseTypeId">
+                <input type="hidden" name="amount">
+                <input type="hidden" name="payer">
+                <input type="hidden" name="date">
+                <input type="hidden" name="description">
+                <input type="file" name="receiptFile">
+            </form>
         </section>
     </main>
 </div>

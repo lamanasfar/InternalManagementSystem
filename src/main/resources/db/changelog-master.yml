@@ -3,3 +3,7 @@ databaseChangeLog:
       file: db/changelog/001-customer-add.yml
   - include:
         file: db/changelog/002-add-active-to-customer-entity.yml
+  - include:
+      file: db/changelog/004-create-create-expense-type.yml
+  - include:
+        file: db/changelog/003-create-expense-table.yml

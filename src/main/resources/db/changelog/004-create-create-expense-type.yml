@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-expense-types-table
+      author: laman
+      changes:
+        - createTable:
+            tableName: expense_types
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
